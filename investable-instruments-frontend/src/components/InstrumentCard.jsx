@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../styles/instrument.css'; 
+import { DollarIcon, TrendingIcon, ClockIcon, PackageIcon, CalendarIcon } from '../assets/icons';
+import '../styles/instrument.css';
 
 function InstrumentCard({ instrument, owned }) {
-  // Helper to format date in readable format
   function formatDate(dateString) {
     if (!dateString) return 'N/A';
     const date = new Date(dateString);
@@ -14,46 +14,98 @@ function InstrumentCard({ instrument, owned }) {
     });
   }
 
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
+
   return (
     <div className="instrument-card">
-      <div className="instrument-card-header">
-        <h2>{instrument.name}</h2>
+      <div className="card-header">
+        <h3>{instrument.name}</h3>
       </div>
-      <div className="instrument-card-body">
-        <div className="instrument-detail">
-          <span className="label">Current Price:</span>
-          <span className="value">${instrument.current_price}</span>
+
+      <div className="card-details">
+        <div className="detail-item">
+          <div className="detail-icon icon-green">
+            <DollarIcon />
+          </div>
+          <div className="detail-content">
+            <p className="detail-label">Current Price</p>
+            <p className="detail-value">{formatCurrency(instrument.current_price)}</p>
+          </div>
         </div>
-        <div className="instrument-detail">
-          <span className="label">Estimated Return:</span>
-          <span className="value">{instrument.estimated_return}%</span>
+
+        <div className="detail-item">
+          <div className="detail-icon icon-blue">
+            <TrendingIcon />
+          </div>
+          <div className="detail-content">
+            <p className="detail-label">Expected Return</p>
+            <p className="detail-value">{instrument.estimated_return}%</p>
+          </div>
         </div>
-        <div className="instrument-detail">
-          <span className="label">Maturity Time:</span>
-          <span className="value">
-            {instrument.maturity_time > 0
-              ? `${instrument.maturity_time} days`
-              : 'N/A'}
-          </span>
+
+        <div className="detail-item">
+          <div className="detail-icon icon-orange">
+            <ClockIcon />
+          </div>
+          <div className="detail-content">
+            <p className="detail-label">Maturity Time</p>
+            <p className="detail-value">
+              {instrument.maturity_time > 0 ? `${instrument.maturity_time} days` : 'N/A'}
+            </p>
+          </div>
         </div>
-        {!owned && <div className="instrument-detail">
-          <span className="label">Available Units:</span>
-          <span className="value">{instrument.available_units}</span>
-        </div>}
-        {instrument.units > 0 && <div className="instrument-detail">
-          <span className="label">Owned Units:</span>
-          <span className="value">{instrument.units}</span>
-        </div>}
-        {owned && <div className="instrument-detail">
-          <span className="label">Buying date:</span>
-          <span className="value">{formatDate(instrument.updated_at)}</span>
-        </div>}
+
+        {!owned && (
+          <div className="detail-item">
+            <div className="detail-icon icon-purple">
+              <PackageIcon />
+            </div>
+            <div className="detail-content">
+              <p className="detail-label">Available Units</p>
+              <p className="detail-value">{instrument.available_units.toLocaleString()}</p>
+            </div>
+          </div>
+        )}
+
+        {instrument.units > 0 && (
+          <div className="detail-item">
+            <div className="detail-icon icon-purple">
+              <PackageIcon />
+            </div>
+            <div className="detail-content">
+              <p className="detail-label">Owned Units</p>
+              <p className="detail-value">{instrument.units}</p>
+            </div>
+          </div>
+        )}
+
+        {owned && (
+          <div className="detail-item">
+            <div className="detail-icon icon-blue">
+              <CalendarIcon />
+            </div>
+            <div className="detail-content">
+              <p className="detail-label">Buying Date</p>
+              <p className="detail-value">{formatDate(instrument.updated_at)}</p>
+            </div>
+          </div>
+        )}
       </div>
-      {!owned && <div className="instrument-card-footer">
-        <Link to={`/book/${instrument.id}`}>
-          <button className="invest-btn">Book & Upload Receipt</button>
-        </Link>
-      </div>}
+
+      {!owned && (
+        <div className="card-footer">
+          <Link to={`/book/${instrument.id}`} className="footer-btn submit-btn">
+            Book & Upload Receipt
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
