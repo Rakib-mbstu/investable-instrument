@@ -1,0 +1,40 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+h1 {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 15px;
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.logo {
+  height: 40px;
+  margin: 0 10px;
+}
+
+.read-the-docs {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.instrument-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
