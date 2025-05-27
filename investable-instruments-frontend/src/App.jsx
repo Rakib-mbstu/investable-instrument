@@ -7,6 +7,7 @@ import Logout from './components/Logout';
 import BookInstrument from './components/BookInstrument';
 import UploadPaymentReceipt from './components/UploadPaymentReceipt';
 import AdminDashboard from './components/AdminDashboard';
+import InstrumentManager from './components/InstrumentManager';
 import './styles/nav.css'
 
 function NavBar() {
@@ -37,12 +38,20 @@ function NavBar() {
         )}
 
         {isAdmin && (
-          <Link 
-            to="/admin" 
-            className={location.pathname === '/admin' ? 'active' : ''}
-          >
-            Verify Payment
-          </Link>
+          <>
+            <Link 
+              to="/admin" 
+              className={location.pathname === '/admin' ? 'active' : ''}
+            >
+              Verify Payment
+            </Link>
+            <Link
+              to="/manage-instruments"
+              className={location.pathname === '/manage-instruments' ? 'active' : ''}
+            >
+              Manage Instruments
+            </Link>
+          </>
         )}
 
         {!token ? (
@@ -85,6 +94,7 @@ function App() {
         <Route path="/book/:id" element={<BookInstrument />} />
         <Route path='/upload-payment' element={<UploadPaymentReceipt />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/manage-instruments" element={<InstrumentManager />} />
       </Routes>
     </Router>
   );

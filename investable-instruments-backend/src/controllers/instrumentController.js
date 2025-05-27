@@ -131,6 +131,89 @@ class InstrumentController {
             console.error('Error cleaning up expired bookings:', error);
         }
     }
+
+    // Admin CRUD Methods
+    async createInstrument(req, res) {
+        const { name, current_price, estimated_return, maturity_time, available_units } = req.body;
+
+        try {
+            // Prepare and sanitize input
+            const newInstrument = {
+                name,
+                current_price: Number(current_price),
+                estimated_return: Number(estimated_return),
+                maturity_time: maturity_time,
+                available_units: parseInt(available_units, 10),
+            };
+
+            // Insert and return the created instrument
+            const [insertedInstrument] = await db('instruments')
+                .insert(newInstrument)
+                .returning('*'); // Only works in PostgreSQL, not in MySQL
+
+            res.status(201).json(insertedInstrument);
+        } catch (error) {
+            res.status(500).json({ message: 'Error creating instrument', error });
+        }
+
+    }
+
+    async updateInstrument(req, res) {
+        const { id } = req.params;
+        const { name, currentPrice, estimatedReturn, maturityTime, availableUnits } = req.body;
+
+        try {
+            const updates = {};
+            if (name) updates.name = name;
+            if (currentPrice) updates.current_price = currentPrice;
+            if (estimatedReturn) updates.estimated_return = estimatedReturn;
+            if (maturityTime) updates.maturity_time = maturityTime;
+            if (availableUnits) updates.available_units = availableUnits;
+
+            const updated = await db('instruments')
+                .where({ id })
+                .update(updates)
+                .returning('*');
+
+            if (updated.length === 0) {
+                return res.status(404).json({ message: 'Instrument not found' });
+            }
+
+            res.status(200).json(updated[0]);
+        } catch (error) {
+            res.status(500).json({ message: 'Error updating instrument', error });
+        }
+    }
+
+    async deleteInstrument(req, res) {
+        const { id } = req.params;
+
+        try {
+            // Check if the instrument has any associated transactions
+            const transactions = await db('transactions')
+                .where({ instrument_id: id })
+                .whereIn('status', ['pending', 'approved']);
+
+            if (transactions.length > 0) {
+                return res.status(400).json({
+                    message: 'Cannot delete instrument with active transactions'
+                });
+            }
+
+            const deleted = await db('instruments')
+                .where({ id })
+                .del()
+                .returning('*');
+
+            if (deleted.length === 0) {
+                return res.status(404).json({ message: 'Instrument not found' });
+            }
+
+            res.status(200).json({ message: 'Instrument deleted successfully' });
+        } catch (error) {
+            res.status(500).json({ message: 'Error deleting instrument', error });
+        }
+    }
 }
 
 export default new InstrumentController();
