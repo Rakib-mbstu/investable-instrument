@@ -22,9 +22,9 @@ router.get('/', instrumentController.getInstruments);
 router.get('/:id', instrumentController.getInstrumentById);
 
 // Authenticated user routes
-router.get('/owned', authenticate, instrumentController.getOwnedInstruments);
-router.post('/book', authenticate, instrumentController.bookInstrument);
-router.get('/booked/pending', authenticate, instrumentController.getBookedButNotPaidInstruments);
+router.get('/owned', authenticate, checkRole(['user']), instrumentController.getOwnedInstruments);
+router.post('/book', authenticate, checkRole(['user']), instrumentController.bookInstrument);
+router.get('/booked/pending', authenticate, checkRole(['user']), instrumentController.getBookedButNotPaidInstruments);
 router.post(
     '/upload-receipt',
     authenticate,

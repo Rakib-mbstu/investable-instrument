@@ -160,15 +160,15 @@ class InstrumentController {
 
     async updateInstrument(req, res) {
         const { id } = req.params;
-        const { name, currentPrice, estimatedReturn, maturityTime, availableUnits } = req.body;
+        const { name, current_price, estimated_return, maturity_time, available_units } = req.body;
 
         try {
             const updates = {};
             if (name) updates.name = name;
-            if (currentPrice) updates.current_price = currentPrice;
-            if (estimatedReturn) updates.estimated_return = estimatedReturn;
-            if (maturityTime) updates.maturity_time = maturityTime;
-            if (availableUnits) updates.available_units = availableUnits;
+            if (current_price) updates.current_price = current_price;
+            if (estimated_return) updates.estimated_return = estimated_return;
+            if (maturity_time) updates.maturity_time = maturity_time;
+            if (available_units) updates.available_units = available_units;
 
             const updated = await db('instruments')
                 .where({ id })
