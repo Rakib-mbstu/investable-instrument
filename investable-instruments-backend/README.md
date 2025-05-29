@@ -11,7 +11,7 @@ A Node.js backend application for managing investment instruments, user transact
 ## Installation
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Rakib-mbstu/investable-instrument
 cd investable-instruments-backend
 npm install
 ```
