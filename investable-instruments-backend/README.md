@@ -67,7 +67,7 @@ exports.up = function (knex) {
       table.string("name").notNullable();
       table.decimal("current_price").notNullable();
       table.decimal("estimated_return").notNullable();
-      table.integer("maturity_time").notNullable();
+      table.timestamp("maturity_time").notNullable();
       table.integer("available_units").notNullable();
       table.timestamp("created_at").defaultTo(knex.fn.now());
       table.timestamp("updated_at").defaultTo(knex.fn.now());
@@ -97,11 +97,23 @@ exports.up = function (knex) {
 
 ### Instruments
 
+Public Routes:
+
 - `GET /api/instruments` - List all instruments
 - `GET /api/instruments/:id` - Get instrument details
+
+User Routes (requires authentication):
+
 - `POST /api/instruments/book` - Book an instrument
 - `GET /api/instruments/owned` - Get user's owned instruments
 - `GET /api/instruments/booked/pending` - Get pending bookings
+- `POST /api/instruments/upload-receipt` - Upload payment receipt
+
+Admin Routes (requires admin role):
+
+- `POST /api/instruments/admin/create` - Create new instrument
+- `PUT /api/instruments/admin/:id` - Update instrument
+- `DELETE /api/instruments/admin/:id` - Delete instrument
 
 ### Admin
 
@@ -168,4 +180,59 @@ npm run dev
 
 ```bash
 npm start
+```
+
+## API Examples
+
+### Creating an Instrument (Admin)
+
+```http
+POST /api/instruments/admin/create
+Content-Type: application/json
+Authorization: Bearer <token>
+
+{
+    "name": "Government Bond 2025",
+    "currentPrice": 1000.50,
+    "estimatedReturn": 8.5,
+    "maturityTime": "2025-12-31",
+    "availableUnits": 100
+}
+```
+
+### Updating an Instrument (Admin)
+
+```http
+PUT /api/instruments/admin/1
+Content-Type: application/json
+Authorization: Bearer <token>
+
+{
+    "currentPrice": 1050.75,
+    "availableUnits": 95
+}
+```
+
+### Booking an Instrument (User)
+
+```http
+POST /api/instruments/book
+Content-Type: application/json
+Authorization: Bearer <token>
+
+{
+    "instrumentId": 1,
+    "units": 5
+}
+```
+
+### Uploading Receipt
+
+```http
+POST /api/instruments/upload-receipt
+Content-Type: multipart/form-data
+Authorization: Bearer <token>
+
+file: <receipt_file>
+bookingId: <booking_id>
 ```
