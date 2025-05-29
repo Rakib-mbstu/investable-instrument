@@ -27,7 +27,7 @@ A modern React-based web application for discovering, booking, and managing inve
 
 1. **Clone the repository:**
    ```bash
-   git clone <repo-url>
+   git clone https://github.com/Rakib-mbstu/investable-instrument
    cd investable-instruments-frontend
    ```
 2. **Install dependencies:**
